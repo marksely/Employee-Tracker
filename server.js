@@ -53,6 +53,9 @@ function startQuestions() {
             case 'update an employee role': 
                 updateEmployeeRole();
                 break;
+            // default: 
+            //     startQuestions();
+            //     break;
         }
     })
 }
