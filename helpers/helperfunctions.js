@@ -1,11 +1,48 @@
-const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
-const app = express();
+function startQuestions() {
+    inquirer
+    .prompt(
+        {
+            type: 'list',
+            message: 'What would you like to do?',
+            choices: ['View all departments', 'View all roles', 'View all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role'],
+            name: 'task'
+        }
+    )
+    .then(data => {
+        console.log(data);
+        switch (data.task) {
+            case 'View all departments':
+                viewDepartments();
+                break;
+            case 'View all roles':
+                viewRoles();
+                break;
+            case 'View all employees':
+                viewEmployees();
+                break;
+            case 'add a department':
+                addDepartment();
+                break;
+            case 'add a role':
+                addRole();
+                break;
+            case 'add an employee':
+                addEmployee();
+                break;
+            case 'update an employee role': 
+                updateEmployeeRole();
+                break;
+            // default: 
+            //     startQuestions();
+            //     break;
+        }
+    })
+}
 
-app.use(express.urlencoded({ extended: false}));
-app.use(express.json());
 
 const db = mysql.createConnection(
     {
@@ -18,94 +55,84 @@ const db = mysql.createConnection(
 );
 
 const viewDepartments = () => {
-    app.get('/api/departments', (req, res) => {
-        const sql = `SHOW * FROM department;`;
+    
+    const sql = `SELECT * FROM department`;
 
-        db.query(sql, (err, rows) => {
-            if(err) {
-                res.json(err);
-                return;
-            } else {
-                res.json({
-                    message: 'Departments',
-                    data: rows
-                });
-            }
-        });
+    db.query(sql, (err, data) => {
+        if(err) {
+            res.json(err);
+        } else {
+            console.table(data);
+            startQuestions();
+        }
     });
 };
 
 const viewRoles = () => {
-    app.get('/api/roles', (req, res) => {
-        const sql = `SHOW * FROM role;`;
+    
+    const sql = `SELECT * FROM role;`;
 
-        db.query(sql, (err, rows) => {
-            if(err) {
-                res.json(err);
-                return;
-            } else {
-                res.json({
-                    message: 'Roles',
-                    data: rows
-                });
-            }
-        });
+    db.query(sql, (err, data) => {
+        if(err) {
+            return err;
+        } else {
+            console.table(data);
+            startQuestions();
+        }
     });
-};
+ };
 
 const viewEmployees = () => {
-    app.get('/api/employees', (req, res) => {
-        const sql = `SHOW * FROM employee;`;
+    
+    const sql = `SELECT * FROM employee;`;
 
-        db.query(sql, (err, rows) => {
-            if(err) {
-                res.json(err);
-                return;
-            } else {
-                res.json({
-                    message: 'Employees',
-                    data: rows
-                });
-            }
-        });
+    db.query(sql, (err, data) => {
+        if(err) {
+            return err;
+        } else {
+            console.table(data);
+            startQuestions();
+        }
     });
 };
 
-const addDepartment = () => {
-    app.post('/api/new-department', (req ,res) => {
-        const sql = `INSERT INTO department (id, name)
-        VALUES (?)`;
-        const params = [req.body.id, req.body.name];
 
-        db.query(sql, params, (err,result) => {
-            if(err) {
-                res.json(err);
-                return;
-            } else {
-                res.json('Successfully added a new department');
-            }
-        });
-    });
-};
+// const addDepartment = () => {
+//     app.post('/api/new-department', (req ,res) => {
+//         const sql = `INSERT INTO department (id, name)
+//         VALUES (?)`;
+//         const params = [req.body.id, req.body.name];
 
-const addRole = () => {
+//         db.query(sql, params, (err,result) => {
+//             if(err) {
+//                 res.json(err);
+//                 return;
+//             } else {
+//                 res.json('Successfully added a new department');
+//             }
+//         });
+//     });
+// };
 
-}; 
+// const addRole = () => {
 
-const addEmployee = () => {
+// }; 
 
-};
+// const addEmployee = () => {
 
-const updateEmployeeRole = () => {
+// };
 
-};
+// const updateEmployeeRole = () => {
+
+// };
 
 module.exports = {
+    startQuestions,
     viewDepartments,
     viewRoles,
     viewEmployees,
-    addDepartment,
-    addRole,
-    addEmployee,
-    updateEmployeeRole
+    // addDepartment,
+    // addRole,
+    // addEmployee,
+    // updateEmployeeRole
 };
