@@ -97,22 +97,28 @@ const viewEmployees = () => {
 };
 
 
-// const addDepartment = () => {
-//     app.post('/api/new-department', (req ,res) => {
-//         const sql = `INSERT INTO department (id, name)
-//         VALUES (?)`;
-//         const params = [req.body.id, req.body.name];
+const addDepartment = () => {
+    inquirer
+    .prompt(
+        {
+            type: 'text',
+            message: 'What is the name of the department?',
+            name: 'Depname'
+        }
+    ).then((data) => {
+        console.log(data.Depname)
+        const sql = `INSERT INTO department (name)
+        VALUE ${data.Depname}`;
 
-//         db.query(sql, params, (err,result) => {
-//             if(err) {
-//                 res.json(err);
-//                 return;
-//             } else {
-//                 res.json('Successfully added a new department');
-//             }
-//         });
-//     });
-// };
+        db.query(sql, params, (err,result) => {
+            if(err) {  
+                return err;
+             } else {
+            res.json('Successfully added a new department');
+            }
+         });
+    })
+};
 
 // const addRole = () => {
 
