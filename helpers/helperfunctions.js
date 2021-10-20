@@ -70,7 +70,7 @@ const viewDepartments = () => {
 
 const viewRoles = () => {
     
-    const sql = `SELECT * FROM role;`;
+    const sql = `SELECT * FROM role`;
 
     db.query(sql, (err, data) => {
         if(err) {
@@ -84,7 +84,15 @@ const viewRoles = () => {
 
 const viewEmployees = () => {
     
-    const sql = `SELECT * FROM employee;`;
+    const sql = `SELECT employee.id, employee.first_name, employee.last_name AS, role.title, department.name AS "department", role.salary, CONCAT(supervisor.first_name, ' ',supervisor.last_name) AS manager_id
+    FROM employee
+    JOIN role
+    ON employee.role_id = role.id
+    JOIN department
+    ON role.department_id = department.id
+    LEFT JOIN employee supervisor 
+    ON supervisor.id = employee.manager_id
+    ORDER BY employee.id;`;
 
     db.query(sql, (err, data) => {
         if(err) {
@@ -107,22 +115,23 @@ const addDepartment = () => {
         }
     ).then((data) => {
         console.log(data.Depname)
-        const sql = `INSERT INTO department (name)
-        VALUE ${data.Depname}`;
+        const sql = `INSERT INTO department SET ?` 
+         //VALUES (${data.Depname})`;
 
-        db.query(sql, params, (err,result) => {
+        db.query(sql, {name: data.Depname}, (err,result) => {
             if(err) {  
                 return err;
-             } else {
-            res.json('Successfully added a new department');
+            } else {
+                return 'Successfully added a new department';
             }
          });
     })
 };
 
-// const addRole = () => {
-
-// }; 
+const addRole = () => {
+    //create prompt
+    const sql = `INSERT INTO role`
+}; 
 
 // const addEmployee = () => {
 
@@ -132,13 +141,13 @@ const addDepartment = () => {
 
 // };
 
-module.exports = {
-    startQuestions,
-    viewDepartments,
-    viewRoles,
-    viewEmployees,
-    // addDepartment,
-    // addRole,
-    // addEmployee,
-    // updateEmployeeRole
+ module.exports = {
+     startQuestions
+//     viewDepartments,
+//     viewRoles,
+//     viewEmployees,
+//     addDepartment,
+//     // addRole,
+//     // addEmployee,
+//     // updateEmployeeRole
 };
