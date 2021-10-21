@@ -1,9 +1,15 @@
-SELECT employee.id, employee.first_name AS `first name`, employee.last_name AS `last name`, role.title, department.name AS `department`, role.salary, CONCAT(supervisor.first_name, ' ',supervisor.last_name) AS manager_id
-FROM employee
-JOIN role
-ON employee.role_id = role.id
-JOIN department
-ON role.department_id = department.id
-LEFT JOIN employee supervisor 
-ON supervisor.id = employee.manager_id
-ORDER BY employee.id;
+-- SELECT employee.id, employee.first_name AS `first name`, employee.last_name AS `last name`, role.title, department.name AS `department`, role.salary, CONCAT(supervisor.first_name, ' ',supervisor.last_name) AS manager_id
+-- FROM employee
+-- JOIN role
+-- ON employee.role_id = role.id
+-- JOIN department
+-- ON role.department_id = department.id
+-- LEFT JOIN employee supervisor 
+-- ON supervisor.id = employee.manager_id
+-- ORDER BY employee.id;
+
+-- SELECT role.id, role.title, department.name AS 'department', role.salary
+-- FROM role
+-- INNER JOIN department
+-- ON role.department_id = department.id
+-- ORDER BY role.id;
